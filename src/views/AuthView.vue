@@ -31,10 +31,21 @@
   </div>
 </template>
 <script setup>
-const callback = (response) => {
-  // This callback will be triggered when the user selects or login to
-  // his Google account from the popup
-  console.log("Handle the response", response);
+import axios from "axios"
+
+const callback = async (response) => {
+  try {
+    console.log("Handle the response", response);
+    // Ensure that response.credential contains the ID token
+    const idToken = response.credential; // Replace with the correct property containing the ID token
+
+    // Make a POST request to your backend
+    const res = await axios.post("http://localhost:3000/auth", { idToken });
+    
+    console.log(res.data); // Log the response data from the backend
+  } catch (error) {
+    console.error("Error occurred during POST request:", error);
+  }
 };
 </script>
 
