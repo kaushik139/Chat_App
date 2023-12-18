@@ -18,11 +18,11 @@ export default createStore({
     },
   },
   actions: {
-    
+
     async createRoomAction({ state }) {
         const credential = localStorage.getItem('credential');
         const email = localStorage.getItem('email');
-
+        console.log(`${state.url}createroom`);
         try {
           const res = await axios.post(`${state.url}createroom`, {
             credential: credential,
