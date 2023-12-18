@@ -31,14 +31,22 @@
                 <div class="msgTime">-{{ msg.timeStamp }}</div>
             </li>
           </ul>
+          <div>
+            <form @submit="sendMessage">
+          <input type="text" v-model="msg" style="margin-left:-400px"/>
+              <button>Send</button>
+        </form>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
     
     <script>
 import NavBar from "../components/navBar.vue";
+import socketioService from '../services/socketio.service';
 
 export default {
   components: {
@@ -53,8 +61,17 @@ export default {
       return firstName;
     },
   },
-
+  methods:{
+    sendMessage(e){
+      e.preventDefault();
+      this.socketService.sendMessage({
+        name:localStorage.getItem("name"),
+        msg:this.msg})
+    }
+  },
   data: () => ({
+    msg:"",
+    socketService : null,
     participant: [
       {
         name: "abby",
@@ -90,12 +107,26 @@ export default {
         msg: "qwerty",
         timeStamp: '7:31'
       },
+      
     ],
   }),
 
   async mounted() {
-    // console.log(localStorage.getItem('name'));
   },
+  async created() {
+    const roomId = this.$route.query.roomId;
+    this.socketService = new socketioService(roomId); ; // Initialize the socket connection
+    this.participant.push({name:localStorage.getItem("name")})
+    this.socketService.setMessageListener((message) => {
+    // Handle the received message here
+    this.messages.push(message)
+
+  });
+
+  },
+  // beforeUnmount() {
+  //   socketioService.disconnect();
+  // },
 };
 </script>
       

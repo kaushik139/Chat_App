@@ -14,12 +14,7 @@ export default {
   computed: {
   },
 
-  created() {
-    SocketioService.setupSocketConnection();
-  },
-  beforeUnmount() {
-    SocketioService.disconnect();
-  },
+
 
   watch: {
   },
