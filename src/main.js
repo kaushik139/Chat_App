@@ -5,6 +5,7 @@ import store from './store'
 import 'bootstrap/dist/css/bootstrap.css'
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js'
 import vue3GoogleLogin from 'vue3-google-login'
+import '@fortawesome/fontawesome-free/css/all.css';
 
 
 createApp(App).use(store).use(router).use(bootstrap).use(vue3GoogleLogin, {

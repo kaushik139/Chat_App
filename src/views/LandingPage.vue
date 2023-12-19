@@ -1,47 +1,47 @@
 <template>
-    <div class="container">
-       <h1>Landing Page</h1>
-       <button class="btn btn-primary" @click="$router.push('/auth')">Get Started</button>
-    </div>
-      </template>
+  <div class="container-fluid m-0 p-0">
+    <nav-bar class="m-0 navBaar" :data="navData"></nav-bar>
+    <h1>Landing Page</h1>
+    <button class="btn btn-primary" @click="$router.push('/auth')">
+      Get Started
+    </button>
+    <Footer class="footer"></Footer>
+  </div>
+</template>
     
     <script>
-    
-    export default {
-      components: {
-      },
-    
-      computed: {
-      },
-    
-      data: () => ({
-      }),
-      
-      async mounted() {
-      },
-    };
-    </script>
+import NavBar from "../components/navBar.vue";
+import Footer from "../components/footer";
+
+export default {
+  components: {
+    NavBar,
+    Footer,
+  },
+
+  computed: {},
+
+  data: () => ({
+    navData: {
+      showProfileChip: false,
+      showLandingPageControls: true
+    },
+  }),
+  async mounted() {},
+};
+</script>
       
       <style scoped>
-      #app {
-        font-family: Avenir, Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: center;
-        /* color: #2c3e50; */
-      }
       
-      nav {
-        padding: 30px;
-      }
-      
-      nav a {
-        font-weight: bold;
-        /* color: #2c3e50; */
-      }
-      
-      nav a.router-link-exact-active {
-        /* color: #42b983; */
-      }
-      </style>
+.container-fluid {
+  margin: none;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  
+}
+.navBaar {
+  width: 100%;
+}
+</style>
       

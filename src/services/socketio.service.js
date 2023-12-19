@@ -9,8 +9,8 @@ class SocketioService {
     this.socket.on("connect", () => {
       console.log(this.socket.id); // Log the socket ID after successful connection
       this.socket.emit('joinRoom', {
-        token:localStorage.getItem('credential'),
-        email:localStorage.getItem('email'),
+        token: localStorage.getItem('credential'),
+        email: localStorage.getItem('email'),
         roomId: roomId
       });
 
@@ -23,13 +23,24 @@ class SocketioService {
 
   setMessageListener(callback) {
     this.socket.on("message", (message) => {
+      console.log(message)
       callback(message);
     });
   }
 
-  sendMessage({name,msg}){
-    this.socket.emit("message",{name,msg})
+  sendMessage({ name, msg, roomId }) {
+    console.log(name, ":::", msg, ";;;", roomId)
+    this.socket.emit("message", { email: localStorage.getItem('email'), name, msg, roomId })
   }
+
+  expired() {
+    this.$router.push('/home')
+  }
+
+  invalidRoom() {
+    this.$router.push('/home')
+  }
+
 }
 
 export default SocketioService;

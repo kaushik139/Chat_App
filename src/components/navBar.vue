@@ -1,10 +1,14 @@
 <template>
         <nav class="navbar bg-body-tertiary p-0">
-  <div class="container-fluid">
+  <div class="container-fluid bg-primary">
     <router-link to="/home" class="navbar-brand logo">
       ChatON
     </router-link>
-    <div v-if="showName" class="chip ml-auto bg-primary px-3 py-1 rounded-pill text-dark">
+          <div v-if="data.showLandingPageControls" class="navOptions d-flex">
+            <a class="nav-link m-2" aria-current="page" href="#">Login</a>
+          <!-- <a class="nav-link m-2" href="#">Signup</a> -->
+          </div>
+    <div v-if="showProfileChip" class="chip ml-auto bg-primary px-3 py-1 rounded-pill text-dark">
   <img src="img_avatar.jpg" alt="P.I" width="96" height="96">
   {{name}}
 </div>
@@ -18,7 +22,7 @@ export default {
   name: 'nav',
 
   props: {
-    showName: Boolean,
+    data: Object,
   },
     
   computed: {
@@ -27,11 +31,13 @@ export default {
       const words = fullName.split(" "); 
       const firstName = words[0];
       return firstName;
+    },
+    showProfileChip() {
+      return this.data.showProfileChip;
       }
     },
 
-    data: () => ({
-  }),
+    data: () => ({ }),
 
   mounted() {
   }

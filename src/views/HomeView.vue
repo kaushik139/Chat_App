@@ -1,6 +1,6 @@
 <template>
   <div class="cont">
-    <navBar :showName="true"></navBar>
+    <navBar :data="navData"></navBar>
     <div class="logoDiv">
       <span class="logoHome d-block mb-0">ChatON</span>
       <span class="logoDesc m-0">Room Chats</span>
@@ -57,7 +57,7 @@
         <button class="btn btn-primary" style="width: 40%" @click="createRoom">Create Room</button>
       </div>
     </div>
-    <Footer></Footer>
+    <Footer class="footer"></Footer>
   </div>
 </template>
     
@@ -74,6 +74,9 @@ export default {
   computed: {},
 
   data: () => ({
+    navData: {
+      showProfileChip: true,
+    },
     people: [
       {
         name: "John Doe",
@@ -110,7 +113,7 @@ export default {
         await this.$store.dispatch('createRoomAction', this.roomCode);
     }
   },
-
+ 
   async mounted() {},
 };
 </script>
@@ -161,7 +164,9 @@ export default {
 .neon{
   border: 2px solid transparent; /* Set a transparent border */
   box-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff, 0 0 30px #00f2ff, 0 0 40px #00f2ff; /* Multiple shadows to create the neon effect */
-
+}
+.footer{
+  height: 11vh;
 }
 </style>
       

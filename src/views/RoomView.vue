@@ -1,128 +1,190 @@
 <template>
-  <div class="cont">
-    <div class="try m-5"></div>
-
-    <nav-bar class="mt-0" :show-name="true" :roomName="aa"></nav-bar>
+  <div class="cont bg-primary">
+    <nav-bar class="mt-0" :data="navData"></nav-bar>
     <div class="row content">
-        <!-- ////////////////////Participant's List////////////////////////////////// -->
+      <!-- ////////////////////Side Menu////////////////////////////////// -->
       <div class="col-md-3 pList">
-        <h3>In Room</h3>
-        <ul
-          type="none"
-          v-for="(person, index) in participant"
-          :key="index"
-          class="list"
-        >
-          <li>
-            <img src="img_avatar.jpg" alt="P.I" width="96" height="96" />
-            {{ person.name }}
-            <span v-if="person.name === hostName">(Host)</span>
-          </li>
-        </ul>
+        <div class="row m-3">
+          <h5>Room Details:</h5>
+          <h6>
+            Room ID: <span class="key">{{ roomId }}</span>
+          </h6>
+          <h6>
+            Room Key: <span class="key">{{ roomKey }}</span>
+          </h6>
+        </div>
+        <!-- ////////////////////Participant's List////////////////////////////////// -->
+        <div class="row m-2">
+          <h3>In Room</h3>
+          <ul
+            type="none"
+            v-for="(person, index) in participant"
+            :key="index"
+            class="list"
+          >
+            <li>
+              <img src="img_avatar.jpg" alt="P.I" width="96" height="96" />
+              {{ person.name }}
+              <span v-if="person.name === hostName">(Host)</span>
+            </li>
+          </ul>
+        </div>
       </div>
       <!-- ////////////////////////Message Area/////////////////////////////////////// -->
       <div class="col-md-9 msg">
         <div class="msgArea">
-          <ul type="none" class="msgBody" v-for="(msg, index) in messages" :key="index">
-            <li>
-                <div class="msgcontent">
-                    {{ msg.msg }}
-                </div>
+          <div class="row messages">
+            <!-- Messages content -->
+            <ul
+              type="none"
+              class="msgBody"
+              v-for="(msg, index) in messages"
+              :key="index"
+            >
+              <li>
+                <div class="msgcontent">{{ msg.msg }}</div>
                 <div class="msgTime">-{{ msg.timeStamp }}</div>
-            </li>
-          </ul>
-          <div>
+              </li>
+            </ul>
+            <!-- End of Messages content -->
+          </div>
+
+          <!-- SenDiv for input and button -->
+          <div class="row senDiv">
             <form @submit="sendMessage">
-          <input type="text" v-model="msg" style="margin-left:-400px"/>
-              <button>Send</button>
-        </form>
+              <input type="text" v-model="msg" class="msgText px-2" />
+              <button class="sendBtn btn btn-lg bg-dark text-primary">
+                SEND
+              </button>
+            </form>
           </div>
         </div>
       </div>
-
     </div>
+    <Footer class="footer"></Footer>
   </div>
 </template>
     
     <script>
+import { mapGetters } from "vuex";
 import NavBar from "../components/navBar.vue";
-import socketioService from '../services/socketio.service';
+import socketioService from "../services/socketio.service";
+import Footer from "../components/footer";
 
 export default {
   components: {
     NavBar,
+    Footer,
   },
 
   computed: {
+    ...mapGetters(["roomCodeGetter"]),
     hostName() {
       const fullName = localStorage.getItem("name") || "";
       const words = fullName.split(" ");
       const firstName = words[0];
       return firstName;
     },
+    textRows() {
+      if (this.msg.length <= 50) return 1;
+      else return this.msg.length / 50 + 1;
+    },
+    roomKey() {
+      return this.$store.state.roomPassKey;
+    },
   },
-  methods:{
-    sendMessage(e){
+  methods: {
+    sendMessage(e) {
+      console.log("PPP");
       e.preventDefault();
+      // console.log(this.roomId);
       this.socketService.sendMessage({
-        name:localStorage.getItem("name"),
-        msg:this.msg})
-    }
+        name: localStorage.getItem("name"),
+        msg: this.msg,
+        roomId: this.$route.query.roomId,
+      });
+    },
   },
   data: () => ({
-    msg:"",
-    socketService : null,
+    navData: {
+      showProfileChip: true,
+      showLandingPageControls: false,
+    },
+    roomId: "",
+    msg: "",
+    socketService: null,
     participant: [
-      {
-        name: "abby",
-      },
-      {
-        name: "micquel",
-      },
-      {
-        name: "Kaushik",
-      },
-      {
-        name: "stone",
-      },
+      // {
+      //   name: "abby",
+      // },
+      // {
+      //   name: "micquel",
+      // },
+      // {
+      //   name: "Kaushik",
+      // },
+      // {
+      //   name: "stone",
+      // },
     ],
     messages: [
-      {
-        name: "abby",
-        msg: "qwerty",
-        timeStamp: '7:28'
-            },
-            {
-        name: "abby",
-        msg: "qwerty",
-        timeStamp: '7:29'
-            },
-            {
-        name: "Kaushik",
-        msg: "All hail qwerty!",
-        timeStamp: '7:30'
-            },
-            {
-        name: "abby",
-        msg: "qwerty",
-        timeStamp: '7:31'
-      },
-      
+      // {
+      //   name: "abby",
+      //   msg: "qwerty",
+      //   timeStamp: "7:28",
+      // },
+      // {
+      //   name: "abby",
+      //   msg: "qwerty",
+      //   timeStamp: "7:29",
+      // },
+      // {
+      //   name: "Kaushik",
+      //   msg: "All hail qwerty!",
+      //   timeStamp: "7:30",
+      // },
+      // {
+      //   name: "abby",
+      //   msg: "qwerty",
+      //   timeStamp: "7:31",
+      // },
+      // {
+      //   name: "abby",
+      //   msg: "qwerty",
+      //   timeStamp: "7:28",
+      // },
+      // {
+      //   name: "abby",
+      //   msg: "qwerty",
+      //   timeStamp: "7:29",
+      // },
+      // {
+      //   name: "Kaushik",
+      //   msg: "All hail qwerty!",
+      //   timeStamp: "7:30",
+      // },
+      // {
+      //   name: "abby",
+      //   msg: "qwerty",
+      //   timeStamp: "7:31",
+      // },
     ],
   }),
 
-  async mounted() {
+  beforeMount() {
+    this.navData.showProfileChip = true;
   },
+  async mounted() {},
   async created() {
     const roomId = this.$route.query.roomId;
-    this.socketService = new socketioService(roomId); ; // Initialize the socket connection
-    this.participant.push({name:localStorage.getItem("name")})
+    this.roomId = roomId;
+    this.socketService = new socketioService(roomId); // Initialize the socket connection
+    this.participant.push({ name: localStorage.getItem("name") });
     this.socketService.setMessageListener((message) => {
-    // Handle the received message here
-    this.messages.push(message)
-
-  });
-
+      console.log("PUSH", message);
+      // Handle the received message here
+      this.messages.push(message);
+    });
   },
   // beforeUnmount() {
   //   socketioService.disconnect();
@@ -131,75 +193,105 @@ export default {
 </script>
       
 <style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  /* color: #2c3e50; */
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  /* color: #2c3e50; */
-}
-
-nav a.router-link-exact-active {
-  /* color: #42b983; */
-}
-
 .cont {
   text-align: center;
   color: white;
   margin: 0px;
-  background: rgb(0, 136, 255);
-  /* margin-top: 40px; */
+  width: 100%;
   min-height: 90vh;
 }
-
+.content {
+  width: 95%;
+  margin: auto;
+  padding: 10px;
+  text-align: center;
+}
 .pList {
   background: #8d04b0;
-  min-height: 90vh;
+  /* min-height: 90vh; */
+  border-radius: 30px;
 }
-
 .list {
   text-align: left;
   margin-left: 10%;
 }
-
 .msgArea {
   background-image: url("https://www.freevector.com/uploads/vector/preview/2481/FreeVector-Christmas-Doodle-Pattern.jpg");
   margin: 3%;
   background-repeat: repeat;
   background-size: 20%;
   filter: grayscale(40%);
-    border-radius: 5%;
-  min-height: 92%;
-  position: relative;
+  border-radius: 5%;
   padding: 3%;
+  position: relative;
+  /* height: calc(100vh - 100px); */
+  height: 77vh;
+  /* overflow-y: auto; */
+}
+.messages {
+  height: 400px;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent !important;
+}
+.messages::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar width */
+}
 
+.messages::-webkit-scrollbar-track {
+  background: purple; /* Track color */
 }
-.msgBody{
-    background: rgb(2, 54, 106);
-    margin: 15px;
-    border-radius: 8px 8px 8px 8px;
-    width: 75%;
-    position: relative;
-/* margin-left: auto; */
+.msgBody {
+  background: rgb(2, 54, 106);
+  margin: 15px;
+  border-radius: 8px 8px 8px 8px;
+  width: 75%;
+  position: relative;
+  /* margin-left: auto; */
 }
-.msgcontent{
-    width: 90%;
-    text-align: left;
+.msgcontent {
+  width: 90%;
+  text-align: left;
 }
-.msgTime{
-    color: grey;
-    font-size: 12px;
-    text-align: right; 
-    margin: 3%;
-    }
+.msgTime {
+  color: grey;
+  font-size: 12px;
+  text-align: right;
+}
+.senDiv {
+  position: sticky;
+  margin-top: 30px;
+  height: auto;
+  width: 100%;
+  bottom: 2;
+  z-index: 9;
+  /* padding: 10px; */
+}
+.msgText {
+  border-radius: 15px;
+  width: 80%;
+  padding: 5px;
+  border: 0.5px solid #0490f4;
+}
+.msgText:focus {
+  border-radius: 15px;
+  width: 80%;
+  padding: 5px;
+  border: 2px solid rgb(2, 54, 106);
+  outline: none;
+}
+.sendBtn {
+  color: #0490f4;
+  /* margin-top: -25px; */
+  margin-left: -10px;
+}
+.iconPlane {
+  color: rgb(2, 54, 106);
+  -webkit-text-stroke: 1px #00f2ff; /* Text stroke to create outline */
+}
+.key {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: 15px;
+}
 </style>
       

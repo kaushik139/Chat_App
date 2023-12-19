@@ -1,6 +1,6 @@
 <template>
-    <div class="cont">
-        <span prepend-icon="mdi-copyright">ChatON {{ year }}</span>
+    <div class="cont_footer">
+        <a class="text">&copy; ChatON  {{ year }}</a>
     </div>
 </template>
 
@@ -19,10 +19,13 @@ export default {
 </script>
 
 <style scoped>
-.cont{
-    background: black;
-    color: white;
+.cont_footer{
+    background: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     text-align: center;
-    /* max-height: 40px; */
+    padding-top: 15px;
+}
+a{
+        text-decoration: none;
 }
 </style>
