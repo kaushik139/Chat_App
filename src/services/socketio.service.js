@@ -28,6 +28,12 @@ class SocketioService {
     });
   }
 
+  setMemberListener(callback){
+    this.socket.on("newJoin",(participantList)=>{
+      callback(participantList);
+    })
+  }
+
   sendMessage({ name, msg, roomId }) {
     console.log(name, ":::", msg, ";;;", roomId)
     this.socket.emit("message", { email: localStorage.getItem('email'), name, msg, roomId })

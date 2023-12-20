@@ -25,6 +25,9 @@ export default createStore({
       state.roomId = value.roomId;
       state.roomPassKey = value.passkey;
     },
+    setPassKey(state,key){
+      state.roomPassKey=key;
+    }
   },
   actions: {
 
@@ -43,6 +46,21 @@ export default createStore({
           }
         }catch(err){console.error(err);}
     },
+
+    async getPassKey({state,commit},roomId){
+      console.log("122142515")
+      const email = localStorage.getItem("email");
+      try{
+        const res = await axios.post(`${state.url}getKey`,{
+          email,
+          roomId
+        });
+        console.log("**********",res)
+        commit('setPassKey',res.data);
+      }catch(error){
+        console.log(error)
+      }
+    }
   },
   modules: {
   }
