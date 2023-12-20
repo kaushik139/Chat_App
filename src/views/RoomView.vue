@@ -127,6 +127,7 @@ export default {
     },
     roomId: "",
     msg: "",
+    passKey:"",
     socketService: null,
     participant: [
       // {
@@ -201,6 +202,7 @@ export default {
   async created() {
     const roomId = this.$route.query.roomId;
     this.roomId = roomId;
+    this.$store.dispatch("getPassKey",roomId)
     this.socketService = new socketioService(roomId); // Initialize the socket connection
     this.participant.push({ name: localStorage.getItem("name") });
     this.socketService.setMessageListener((message) => {
@@ -208,6 +210,13 @@ export default {
       // Handle the received message here
       this.messages.push(message);
     });
+    this.socketService.setMemberListener((participantList)=>{
+
+      console.log(participantList)
+
+      this.participant=participantList
+    })
+
   },
   // beforeUnmount() {
   //   socketioService.disconnect();

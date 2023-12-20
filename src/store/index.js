@@ -17,7 +17,10 @@ export default createStore({
     roomCodeMutation(state, value) {
       state.roomId = value.roomId;
       state.roomPassKey = value.passkey;
-    },
+//     },
+ socket2
+    setPassKey(state,key){
+      state.roomPassKey=key;
     setMessagesMutation(state, value) {
       console.log(value);
       state.messages = value;
@@ -44,6 +47,19 @@ export default createStore({
         }catch(err){console.error(err);}
     },
 
+ socket2
+    async getPassKey({state,commit},roomId){
+      console.log("122142515")
+      const email = localStorage.getItem("email");
+      try{
+        const res = await axios.post(`${state.url}getKey`,{
+          email,
+          roomId
+        });
+        console.log("**********",res)
+        commit('setPassKey',res.data);
+      }catch(error){
+        console.log(error)
     async getMessages({ state, commit }, value) {
       // console.log(value.roomId);
       // console.log(value.userEmail);

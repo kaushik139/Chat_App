@@ -20,7 +20,7 @@
             LinkedIN
           </button>
 
-          <GoogleLogin class="my-2 mx-auto p-0 border-2" :callback="callback" />
+          <GoogleLogin class="my-2 mx-auto p-0 border-2" :callback="callback" auto-login />
         </div>
       </div>
     </div>
