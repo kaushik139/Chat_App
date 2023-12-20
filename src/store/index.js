@@ -3,30 +3,30 @@ import axios from 'axios';
 import router from '@/router'; 
 
 export default createStore({
+  modules: {
+  },
+  
   state: {
     url: 'http://localhost:3000/',
     roomId: '',
     roomPassKey: '',
+    messages: [],
 
-  },
-  getters: {
-    roomCodeGetter(state) {
-      // console.log('roomCodeGetter called:- '+state.roomId);
-      // console.log('roomCodeGetter called:- '+state.roomPassKey);
-      const roomCode = {
-        roomId: state.roomId,
-        roomPassKey: state.roomPassKey
-      }
-      return state.roomCode;
-    },
   },
   mutations: {
     roomCodeMutation(state, value) {
       state.roomId = value.roomId;
       state.roomPassKey = value.passkey;
     },
+    setMessagesMutation(state, value) {
+      console.log(value);
+      state.messages = value;
+    }
   },
   actions: {
+    async joinRoomAction({ state, commit }, value) {
+      
+    },
 
     async createRoomAction({ state, commit }) {
         const credential = localStorage.getItem('credential');
@@ -43,7 +43,42 @@ export default createStore({
           }
         }catch(err){console.error(err);}
     },
+
+    async getMessages({ state, commit }, value) {
+      // console.log(value.roomId);
+      // console.log(value.userEmail);
+      if (value) {
+        try {
+          const res = await axios.get(`${state.url}getMessages`, {
+            params: {
+              roomId: value.roomId,
+              userEmail: value.userEmail
+            }
+          });
+          if (res.data) {
+            console.log(res.data);
+            commit('setMessagesMutation', res.data)
+          }
+        }catch(err){console.error(err);}
+      }
+    }
   },
-  modules: {
+
+  getters: {
+    roomCodeGetter(state) {
+      // console.log('roomCodeGetter called:- '+state.roomId);
+      // console.log('roomCodeGetter called:- '+state.roomPassKey);
+      const roomCode = {
+        roomId: state.roomId,
+        roomPassKey: state.roomPassKey
+      }
+      return state.roomCode;
+    },
+    messagesGetter(state) {
+      console.log(state.messages);
+      return state.messages;
+    }
   }
+
+
 })
