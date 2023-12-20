@@ -41,14 +41,25 @@
         <span class="h4">Join Rooms</span>
         <form @submit.prevent="FindByCode">
           <div class="form-group">
-            <label for="roomCode">Enter Room Code</label>
+            <label for="roomCode">Enter Room ID</label>
             <input
-              type="roomCode"
+              type="roomID"
               class="form-control"
               id="roomCode"
-              v-model="roomCode"
+              v-model="roomID"
               required
-              style="width: 60%; margin: auto"
+              style="width: 60%; margin: auto; height: 10%"
+            />
+          </div>
+          <div class="form-group">
+            <label for="roomCode">Enter Room Key</label>
+            <input
+              type="roomKey"
+              class="form-control"
+              id="roomCode"
+              v-model="roomKey"
+              required
+              style="width: 60%; margin: auto; height: 10%"
             />
           </div>
           <button class="btn btn-success mt-2" style="width: 40%">Join</button>
@@ -103,7 +114,7 @@ export default {
     async FindByCode() {
       if (this.roomCode !== '') {
         console.log(this.roomCode);
-        await this.$store.dispatch('roomCodeAction', this.roomCode);
+        await this.$store.dispatch('joinRoomAction', this.roomCode);
         return true;
       }
       else return false;

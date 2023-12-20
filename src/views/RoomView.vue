@@ -5,7 +5,7 @@
       <!-- ////////////////////Side Menu////////////////////////////////// -->
       <div class="col-md-3 pList">
         <div class="row m-3">
-          <h5>Room Details:</h5>
+          <h5>Room Details</h5>
           <h6>
             Room ID: <span class="key">{{ roomId }}</span>
           </h6>
@@ -14,8 +14,8 @@
           </h6>
         </div>
         <!-- ////////////////////Participant's List////////////////////////////////// -->
-        <div class="row m-2">
-          <h3>In Room</h3>
+        <div class="row mt-4">
+          <h5>In Room</h5>
           <ul
             type="none"
             v-for="(person, index) in participant"
@@ -38,14 +38,28 @@
             <ul
               type="none"
               class="msgBody"
-              v-for="(msg, index) in messages"
+              v-for="(msg, index) in DBMessages"
               :key="index"
             >
               <li>
-                <div class="msgcontent">{{ msg.msg }}</div>
-                <div class="msgTime">-{{ msg.timeStamp }}</div>
+                <div class="msgcontent">{{ msg.message }}</div>
+                <div class="msgName">-{{ msg.name }}</div>
+                <div class="msgTime">-{{ moment(msg.created_at).format('MMMM Do YYYY,h:mm a') }}</div>
               </li>
             </ul>
+            <!-- bot message -->
+            <ul
+              type="none"
+              class="msgBody"
+              v-for="(msg, index) in messages"
+              :key="index"
+            >
+              <li> 
+                <div class="msgcontent">{{ msg.msg }}</div>
+                <div class="msgName">-{{ msg.name }}</div>
+                <div class="msgTime">{{ msg.timeStamp }}</div>
+              </li>
+              </ul>
             <!-- End of Messages content -->
           </div>
 
@@ -70,6 +84,7 @@ import { mapGetters } from "vuex";
 import NavBar from "../components/navBar.vue";
 import socketioService from "../services/socketio.service";
 import Footer from "../components/footer";
+import * as moment from 'moment';
 
 export default {
   components: {
@@ -78,7 +93,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["roomCodeGetter"]),
+    ...mapGetters(["roomCodeGetter", "messagesGetter"]),
     hostName() {
       const fullName = localStorage.getItem("name") || "";
       const words = fullName.split(" ");
@@ -170,12 +185,20 @@ export default {
       //   timeStamp: "7:31",
       // },
     ],
+    DBMessages: [],
   }),
 
   beforeMount() {
     this.navData.showProfileChip = true;
   },
-  async mounted() {},
+  async mounted() {
+    const userEmail = localStorage.getItem('email');
+       await this.$store.dispatch('getMessages', { roomId: this.roomId, userEmail: userEmail });
+        if (this.messagesGetter) {
+          // console.log(this.messagesGetter);
+          this.DBMessages = this.messagesGetter;
+        }
+  },
   async created() {
     const roomId = this.$route.query.roomId;
     this.roomId = roomId;
@@ -261,6 +284,11 @@ export default {
 .msgcontent {
   width: 90%;
   text-align: left;
+}
+.msgName {
+  color: grey;
+  font-size: 15px;
+  text-align: right;
 }
 .msgTime {
   color: grey;

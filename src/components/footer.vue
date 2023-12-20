@@ -1,5 +1,5 @@
 <template>
-    <div class="cont_footer">
+    <div class="cont_footer" :style="{ height: setHeight}">
         <a class="text">&copy; ChatON  {{ year }}</a>
     </div>
 </template>
@@ -8,11 +8,17 @@
 
 export default {
     name: 'footer',
+    props: {
+        height: Number
+    },
 
     computed: {
         year() {
             const dat = new Date();
             return dat.getFullYear();
+        },
+        setHeight() {
+            return this.height ? `${this.height}px` : '200px';
         }
     }
 }
