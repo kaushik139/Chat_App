@@ -20,7 +20,11 @@
             LinkedIN
           </button>
 
-          <GoogleLogin class="my-2 mx-auto p-0 border-2" :callback="callback" auto-login />
+          <GoogleLogin
+            class="my-2 mx-auto p-0 border-2"
+            :callback="callback"
+            auto-login
+          />
         </div>
       </div>
     </div>
@@ -34,15 +38,9 @@ const router = useRouter();
 
 const callback = async (response) => {
   try {
-    // console.log("Handle the response", response);
-    // Ensure that response.credential contains the ID token
-    const idToken = response.credential; // Replace with the correct property containing the ID token
-    // Make a POST request to your backend
+    const idToken = response.credential; 
     const res = await axios.post("http://localhost:3000/auth", { idToken });
 
-    // console.log(res.data);
-    // console.log("Handle the response", response.credential);
-    // console.log(res.data.user.userEmail);
     if (res.data.success === true) {
       localStorage.setItem("credential", response.credential);
       localStorage.setItem("email", res.data.user.userEmail);
@@ -55,6 +53,4 @@ const callback = async (response) => {
 };
 </script>
 
-  <style scoped>
-</style>
-  
+<style scoped></style>

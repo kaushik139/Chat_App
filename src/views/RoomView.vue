@@ -33,7 +33,7 @@
       <!-- ////////////////////////Message Area/////////////////////////////////////// -->
       <div class="col-md-9 msg">
         <div class="msgArea">
-          <div class="row messages">
+          <div class="row messages" ref="msgArea">
             <!-- Messages content -->
             <ul
               type="none"
@@ -42,9 +42,9 @@
               :key="index"
             >
               <li>
-                <div class="msgcontent">{{ msg.message }}</div>
+                <div class="msgcontent">{{ msg.msg }}</div>
                 <div class="msgName">-{{ msg.name }}</div>
-                <div class="msgTime">-{{ moment(msg.created_at).format('MMMM Do YYYY,h:mm a') }}</div>
+                <div class="msgTime">-{{ formattedDate(msg) }}</div>
               </li>
             </ul>
             <!-- bot message -->
@@ -54,12 +54,12 @@
               v-for="(msg, index) in messages"
               :key="index"
             >
-              <li> 
+              <li>
                 <div class="msgcontent">{{ msg.msg }}</div>
                 <div class="msgName">-{{ msg.name }}</div>
                 <div class="msgTime">{{ msg.timeStamp }}</div>
               </li>
-              </ul>
+            </ul>
             <!-- End of Messages content -->
           </div>
 
@@ -78,13 +78,13 @@
     <Footer class="footer"></Footer>
   </div>
 </template>
-    
-    <script>
+
+<script>
 import { mapGetters } from "vuex";
 import NavBar from "../components/navBar.vue";
 import socketioService from "../services/socketio.service";
 import Footer from "../components/footer";
-import * as moment from 'moment';
+import moment from "moment";
 
 export default {
   components: {
@@ -107,17 +107,20 @@ export default {
     roomKey() {
       return this.$store.state.roomPassKey;
     },
+    formattedDate() {
+      return (msg) => moment(msg.created_at).format("MMMM Do YYYY, h:mm a");
+    },
   },
   methods: {
     sendMessage(e) {
-      console.log("PPP");
       e.preventDefault();
-      // console.log(this.roomId);
       this.socketService.sendMessage({
         name: localStorage.getItem("name"),
         msg: this.msg,
         roomId: this.$route.query.roomId,
       });
+      this.msg = "";
+      this.$refs.msgArea.scrollTop = this.$refs.msgArea.scrollHeight;
     },
   },
   data: () => ({
@@ -127,21 +130,13 @@ export default {
     },
     roomId: "",
     msg: "",
-    passKey:"",
+    passKey: "",
     socketService: null,
     participant: [
       // {
       //   name: "abby",
       // },
-      // {
-      //   name: "micquel",
-      // },
-      // {
-      //   name: "Kaushik",
-      // },
-      // {
-      //   name: "stone",
-      // },
+
     ],
     messages: [
       // {
@@ -149,41 +144,7 @@ export default {
       //   msg: "qwerty",
       //   timeStamp: "7:28",
       // },
-      // {
-      //   name: "abby",
-      //   msg: "qwerty",
-      //   timeStamp: "7:29",
-      // },
-      // {
-      //   name: "Kaushik",
-      //   msg: "All hail qwerty!",
-      //   timeStamp: "7:30",
-      // },
-      // {
-      //   name: "abby",
-      //   msg: "qwerty",
-      //   timeStamp: "7:31",
-      // },
-      // {
-      //   name: "abby",
-      //   msg: "qwerty",
-      //   timeStamp: "7:28",
-      // },
-      // {
-      //   name: "abby",
-      //   msg: "qwerty",
-      //   timeStamp: "7:29",
-      // },
-      // {
-      //   name: "Kaushik",
-      //   msg: "All hail qwerty!",
-      //   timeStamp: "7:30",
-      // },
-      // {
-      //   name: "abby",
-      //   msg: "qwerty",
-      //   timeStamp: "7:31",
-      // },
+  
     ],
     DBMessages: [],
   }),
@@ -192,38 +153,33 @@ export default {
     this.navData.showProfileChip = true;
   },
   async mounted() {
-    const userEmail = localStorage.getItem('email');
-       await this.$store.dispatch('getMessages', { roomId: this.roomId, userEmail: userEmail });
-        if (this.messagesGetter) {
-          // console.log(this.messagesGetter);
-          this.DBMessages = this.messagesGetter;
-        }
+    const userEmail = localStorage.getItem("email");
+    await this.$store.dispatch("getMessages", {
+      roomId: this.roomId,
+      userEmail: userEmail,
+    });
+    if (this.messagesGetter) {
+      this.DBMessages = this.messagesGetter;
+    }
   },
   async created() {
     const roomId = this.$route.query.roomId;
     this.roomId = roomId;
-    this.$store.dispatch("getPassKey",roomId)
-    this.socketService = new socketioService(roomId); // Initialize the socket connection
+    this.$store.dispatch("getPassKey", roomId);
+    this.socketService = new socketioService(roomId);
     this.participant.push({ name: localStorage.getItem("name") });
     this.socketService.setMessageListener((message) => {
-      console.log("PUSH", message);
-      // Handle the received message here
       this.messages.push(message);
     });
-    this.socketService.setMemberListener((participantList)=>{
+    this.socketService.setMemberListener((participantList) => {
 
-      console.log(participantList)
-
-      this.participant=participantList
-    })
-
+      this.participant = participantList;
+    });
   },
-  // beforeUnmount() {
-  //   socketioService.disconnect();
-  // },
+
 };
 </script>
-      
+
 <style scoped>
 .cont {
   text-align: center;
@@ -331,4 +287,3 @@ export default {
   font-size: 15px;
 }
 </style>
-      
