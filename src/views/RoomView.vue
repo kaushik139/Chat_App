@@ -3,7 +3,7 @@
     <nav-bar class="mt-0" :data="navData"></nav-bar>
     <div class="row content">
       <!-- ////////////////////Side Menu////////////////////////////////// -->
-      <div class="col-md-3 pList" style="height:90vh;overflow-y:auto;overflow-x:hidden">
+      <div class="col-md-3 mt-4 pList" style="">
         <div class="row m-3">
           <h5>Room Details</h5>
           <h6>
@@ -67,7 +67,7 @@
           <div class="row senDiv">
             <form @submit="sendMessage">
               <input type="text" v-model="msg" class="msgText px-2" />
-              <button class="sendBtn btn btn-lg bg-dark text-primary">
+              <button class="sendBtn btn btn-lg bg-secondary text-primary">
                 SEND
               </button>
             </form>
@@ -75,7 +75,7 @@
         </div>
       </div>
     </div>
-    <Footer class="footer"></Footer>
+    <Footer class="footer" :height="footerHeight"></Footer>
   </div>
 </template>
 
@@ -147,6 +147,8 @@ export default {
   
     ],
     DBMessages: [],
+    footerHeight: 48,
+
   }),
 
   beforeMount() {
@@ -186,18 +188,28 @@ export default {
   color: white;
   margin: 0px;
   width: 100%;
-  min-height: 90vh;
+  min-height: 50vh;
 }
 .content {
   width: 95%;
   margin: auto;
   padding: 10px;
   text-align: center;
+  /* height: ; */
 }
 .pList {
   background: #8d04b0;
-  /* min-height: 90vh; */
+  height: 75vh;
   border-radius: 30px;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.pList::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar width */
+}
+
+.pList::-webkit-scrollbar-track {
+  background: purple; /* Track color */
 }
 .list {
   text-align: left;
@@ -213,7 +225,7 @@ export default {
   padding: 3%;
   position: relative;
   /* height: calc(100vh - 100px); */
-  height: 77vh;
+  height: 75vh;
   /* overflow-y: auto; */
 }
 .messages {
@@ -253,7 +265,7 @@ export default {
 }
 .senDiv {
   position: sticky;
-  margin-top: 30px;
+  margin-top: 10px;
   height: auto;
   width: 100%;
   bottom: 2;
