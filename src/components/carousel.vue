@@ -1,34 +1,34 @@
 <template>
   <div
     id="carouselExampleInterval"
-    class="carousel slide carousel-fade m-2"
+    class="carousel slide carousel-fade"
     data-bs-ride="carousel"
   >
     <div class="carousel-inner" :style="{ height: carouselHeight }">
-      <div class="carousel-item active" data-bs-interval="500">
-        <!-- Change interval to 5000 (5 seconds) -->
-        <img
-          src="../assets/1.png"
-          class="d-block"
-          style="width: 28%; margin: auto"
-        />
+      <div class="carousel-item active bg-primary" data-bs-interval="2000">
+       <div class="carousel2"
+       style="width: 100%; max-width: 100%; height: 65vh; display: block; position: relative;">
+        <div class="logo mt-5"> ChatON </div>
+       </div>
       </div>
-      <div class="carousel-item" data-bs-interval="500">
-        <!-- Change interval to 5000 (5 seconds) -->
+      <div class="carousel-item " data-bs-interval="2000">
         <img
-          src="../assets/2.png"
-          class="d-block"
-          style="width: 28%; margin: auto"
-        />
+  src="https://www.shutterstock.com/image-photo/woman-using-computer-laptop-on-600nw-1891028470.jpg"
+  class="d-block"
+  style="width: 100%; max-width: 100%; height: auto; max-height: 65vh; display: block;"
+  alt="Description of the image"
+/>
+
       </div>
-      <div class="carousel-item" data-bs-interval="500">
+     
+      <!-- <div class="carousel-item" data-bs-interval="500"> -->
         <!-- Change interval to 5000 (5 seconds) -->
-        <img
+        <!-- <img
           src="../assets/3.png"
           class="d-block"
           style="width: 22%; margin: auto"
         />
-      </div>
+      </div> -->
     </div>
     <!-- Carousel controls -->
     <button
@@ -70,4 +70,20 @@ export default {
 
 <style>
 /* Your styles here */
+.carousel2{
+  background: rgb(0, 110, 255);
+}
+.logo {
+  font-size: 160px;
+  text-shadow:
+    1px 1px 0 #66c2ff,
+    2px 2px 0 #0e06fd,
+    3px 3px 0 #ed2aff;
+  color: transparent;
+  position: relative; /* Make the original text color transparent */
+}
+
+.logo:hover {
+  color: #b42aff;
+}
 </style>

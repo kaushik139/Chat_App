@@ -4,7 +4,7 @@
     <carousel :data="carouselData"></carousel>
     <!-- text -->
     <div class="text">
-      <button class="btn btn-primary btn-lg m-2" @click="$router.push('/auth')">
+      <button class="btn btn-primary btn-lg m-5" @click="$router.push('/auth')">
         Get Started
       </button>
       <div class="row">

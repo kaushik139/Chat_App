@@ -70,7 +70,7 @@
         </button>
       </div>
     </div>
-    <Footer class="footer"></Footer>
+    <Footer class="footer" :height="footerHeight"></Footer>
   </div>
 </template>
 
@@ -110,6 +110,8 @@ export default {
     ],
     roomCode: "",
     roomKey: "",
+    footerHeight: 72,
+
   }),
 
   methods: {
@@ -173,6 +175,7 @@ export default {
 .logoHome {
   font-size: 48px;
   margin: 0px;
+  width: 99%;
   /* background: linear-gradient(to right, #1b5efb, #8d04b0); */
   /* -webkit-background-clip: text; Apply gradient as text fill */
   /* background-clip: text; */
@@ -183,7 +186,7 @@ export default {
     3px 3px 0 #ed2aff;
   color: transparent;
   font-weight: 1000;
-  animation: wavy 1s ease-in-out infinite;
+  animation: wavy 3s ease-in-out infinite;
   transform: rotate(-5deg);
 }
 .logoDesc {
@@ -200,5 +203,6 @@ export default {
 }
 .footer {
   height: 11vh;
+  margin-top: -35px;
 }
 </style>

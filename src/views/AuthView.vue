@@ -1,11 +1,13 @@
 <template>
   <div class="container">
-    <h1>Auth View</h1>
-    <div class="row justify-content-center m-6">
+    <div class="nav">
+      <router-link to="/home" class="logo"> ChatON </router-link>
+    </div>
+    <div class="row justify-content-center m-6 cont">
       <div class="col-md-6">
         <div class="card p-4">
           Connect easily with:
-          <button
+          <!-- <button
             class="my-2 btn d-block border-2 border-danger text-danger"
             style="width: 60%; margin: auto"
             @click="connectGoogle"
@@ -18,13 +20,16 @@
             @click="connectLinkedIn"
           >
             LinkedIN
-          </button>
+          </button> -->
 
           <GoogleLogin
-            class="my-2 mx-auto p-0 border-2"
+            class="my-4 mx-auto p-0 border-2"
             :callback="callback"
             auto-login
           />
+          <div class="foot text-center mt-4">
+          <a class="text">&copy; ChatON 2023</a>
+          </div>
         </div>
       </div>
     </div>
@@ -53,4 +58,27 @@ const callback = async (response) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.cont{
+  margin: auto;
+  margin-top: 16%;
+}
+.logo {
+  margin: auto;
+  font-size: 50px;
+  text-shadow:
+    1px 1px 0 #66c2ff,
+    2px 2px 0 #0e06fd,
+    3px 3px 0 #ed2aff;
+  color: transparent; /* Make the original text color transparent */
+}
+
+.logo:hover {
+  color: #b42aff;
+}
+a {
+  text-decoration: none;
+  color: grey;
+  font-size: 12px;
+}
+</style>
