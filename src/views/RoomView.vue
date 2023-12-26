@@ -50,8 +50,8 @@
     <nav-bar class="mt-0" :data="navData"></nav-bar>
     <div class="row content">
       <!-- ////////////////////Side Menu////////////////////////////////// -->
-      <div class="col-md-3 " style="height:90vh;overflow-y:auto;overflow-x:hidden">
-        <div class="row m-3">
+      <div class="col-md-3 pListContainer">
+        <div class="row m-3 pList">
           <h5>Your Rooms</h5>
 
           <div class="list-group">
@@ -74,7 +74,8 @@
       </div>
       <!-- ////////////////////////Message Area/////////////////////////////////////// -->
       <div class="col-md-9 msg">
-        <div class="msgArea" style="overflow-y:scroll">
+        <div class="msgBodyContainer p-2 bg-success">
+          <div class="msgArea">
           <div class="row messages" ref="msgArea">
             <!-- Messages content -->
             <ul
@@ -109,16 +110,16 @@
           <div class="row senDiv">
             <form @submit="sendMessage">
               <input type="text" v-model="msg" class="msgText px-2" />
-              <button class="sendBtn btn btn-lg bg-dark text-primary">
-                SEND
-                <i ></i>
+              <button class="sendBtn btn btn-lg">
+                <i class="fas fa-paper-plane fa-xl iconPlane"></i>
               </button>
             </form>
           </div>
         </div>
+        </div>
       </div>
     </div>
-    <!-- <Footer class="footer"></Footer> -->
+    <Footer class="footer" :height="footerHeight"></Footer>
   </div>
 </template>
 
@@ -235,6 +236,8 @@ export default {
   
     ],
     DBMessages: [],
+    footerHeight: 81,
+
   }),
 
   beforeMount() {
@@ -275,42 +278,70 @@ export default {
   width: 95%;
   margin: auto;
   padding: 10px;
+  height: 80vh;
   text-align: center;
 }
-.pList {
+.pListContainer{
   background: #8d04b0;
-  /* min-height: 90vh; */
+  height: 75vh ;
   border-radius: 30px;
+}
+.pList {
+  height: 70vh ;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.pList::-webkit-scrollbar {
+  width: 8px; 
+  max-height: 40%;
+}
+.pList::-webkit-scrollbar-thumb {
+  background: #60076b; 
+  /* background: #006eff;  */
+  border-radius: 5px;
+}
+.pList::-webkit-scrollbar-track {
+  background: transparent; /* Hide the track */
+}
+.pList::-webkit-scrollbar-button {
+  display: none;
 }
 .list {
   text-align: left;
   margin-left: 10%;
 }
-.msgArea {
+.msgBodyContainer{
   background-image: url("https://www.freevector.com/uploads/vector/preview/2481/FreeVector-Christmas-Doodle-Pattern.jpg");
-  margin: 3%;
   background-repeat: repeat;
   background-size: 20%;
   filter: grayscale(40%);
   border-radius: 5%;
+  height: 75vh;
+}
+.msgArea {
   padding: 3%;
-  position: relative;
-  /* height: calc(100vh - 100px); */
-  height: 77vh;
-  /* overflow-y: auto; */
+  height: 100%;
 }
 .messages {
-  /*height: 400px;*/
+  height: 80%;
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent !important;
 }
 .messages::-webkit-scrollbar {
-  width: 0; /* Remove scrollbar width */
+  width: 8px; 
+  max-height: 40%;
 }
-
+.messages::-webkit-scrollbar-thumb {
+  background: #9c9c9c; 
+  /* background: #006eff;  */
+  border-radius: 5px;
+}
 .messages::-webkit-scrollbar-track {
-  background: purple; /* Track color */
+  background: transparent; /* Hide the track */
+}
+.messages::-webkit-scrollbar-button {
+  display: none;
 }
 .msgBody {
   background: rgb(2, 54, 106);
@@ -355,16 +386,17 @@ export default {
   border-radius: 15px;
   width: 80%;
   padding: 5px;
-  border: 2px solid rgb(2, 54, 106);
+  border: 2px solid rgb(208, 0, 255);
   outline: none;
 }
 .sendBtn {
-  color: #0490f4;
-  /* margin-top: -25px; */
+  border-radius: 15px;
+  padding: 4px;
+  margin-left: -6%;
+  margin-top: -0.5%;
 }
 .iconPlane {
-  color: rgb(2, 54, 106);
-  -webkit-text-stroke: 1px #00f2ff; /* Text stroke to create outline */
+  color: rgb(0, 132, 255);
 }
 .key {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
