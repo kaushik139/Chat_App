@@ -9,7 +9,8 @@ export default createStore({
     roomId: "",
     roomPassKey: "",
     messages: [],
-    selfRooms: []
+    selfRooms: [],
+    currentRooms:[]
   },
   mutations: {
     roomCodeMutation(state, value) {
@@ -24,6 +25,9 @@ export default createStore({
     },
     setSelfRooms(state,value){
       state.selfRooms = value.rooms;
+    },
+    setCurrentRooms(state,value){
+      state.currentRooms = value;
     }
   },
   actions: {
@@ -97,6 +101,14 @@ export default createStore({
       })
       return res.data
       // commit("setSelfRooms",res.data)
+    },
+
+    async getCurrentRooms({state,commit}){
+      const res = await axios.post(`${state.url}userRooms`,{
+        userId:localStorage.getItem("email")
+      })
+      console.log(res)
+      commit("setCurrentRooms",res.data);
     }
   },
   getters: {
