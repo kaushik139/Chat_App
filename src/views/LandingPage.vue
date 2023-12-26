@@ -7,7 +7,8 @@
       <button class="btn btn-primary btn-lg m-5" @click="$router.push('/auth')">
         Get Started
       </button>
-      <div class="row">
+      <div class="para">
+        <div class="row">
         <div class="col-md-6 left-col">
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tenetur
           eligendi dolores illo cumque ipsam culpa, libero nobis ullam quam odit
@@ -46,6 +47,7 @@
           consequatur, architecto quam omnis dolore vero nihil eaque. Quod
           recusandae qui ducimus quo, quia vitae.
         </div>
+      </div>
       </div>
     </div>
     <Footer class="footer" :height="footerHeight"></Footer>
@@ -97,34 +99,9 @@ export default {
   background-size: 100% 140%;
   /* border-radius: 14px; */
 }
-
-.left-col-top {
-  text-align: left;
-  background: rgb(251, 251, 251);
-  border-radius: 18px;
-  margin: 2%;
-  padding: 2%;
-}
-.right-col-top {
-  text-align: right;
-  background: rgb(43, 226, 217);
-  border-radius: 18px;
-  margin: 2%;
-  padding: 2%;
-}
-.left-col-bottom {
-  text-align: left;
-  background: rgb(255, 255, 255);
-  border-radius: 18px;
-  margin: 2%;
-  padding: 2%;
-}
-.right-col-bottom {
-  text-align: right;
-  background: rgb(43, 226, 217);
-  border-radius: 18px;
-  margin: 2%;
-  padding: 2%;
+.para{
+  width: 97%;
+  margin-left: 1.5%;
 }
 .left-col {
   text-align: left;
