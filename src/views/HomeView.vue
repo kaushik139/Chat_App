@@ -46,7 +46,7 @@
               type="roomID"
               class="form-control"
               id="roomCode"
-              v-model="roomID"
+              v-model="roomCode"
               required
               style="width: 60%; margin: auto; height: 10%"
             />
@@ -65,13 +65,15 @@
           <button class="btn btn-success mt-2" style="width: 40%">Join</button>
         </form>
         <span class="d-block my-2">or</span>
-        <button class="btn btn-primary" style="width: 40%" @click="createRoom">Create Room</button>
+        <button class="btn btn-primary" style="width: 40%" @click="createRoom">
+          Create Room
+        </button>
       </div>
     </div>
     <Footer class="footer"></Footer>
   </div>
 </template>
-    
+
 <script>
 import navBar from "../components/navBar.vue";
 import Footer from "../components/footer";
@@ -106,29 +108,31 @@ export default {
       },
       // Add more people with their avatars here
     ],
-    roomCode: '',
-
+    roomCode: "",
+    roomKey: "",
   }),
 
   methods: {
     async FindByCode() {
-      if (this.roomCode !== '') {
-        console.log(this.roomCode);
-        await this.$store.dispatch('joinRoomAction', this.roomCode);
-        return true;
+
+      const res = await this.$store.dispatch("joinRoomAction", {
+        roomId: this.roomCode,
+        roomKey: this.roomKey,
+      });
+      if (res === "Joined") {
+        this.$router.push(`/room?roomId=${this.roomCode}`);
       }
-      else return false;
     },
 
     async createRoom() {
-        await this.$store.dispatch('createRoomAction', this.roomCode);
-    }
+      await this.$store.dispatch("createRoomAction", this.roomCode);
+    },
   },
- 
+
   async mounted() {},
 };
 </script>
-      
+
 <style scoped>
 .cont {
   text-align: center;
@@ -146,12 +150,24 @@ export default {
 }
 
 @keyframes wavy {
-  0% {  transform: rotate(5deg); }
-  30% { transform: translateY(-5px); }
-  60% { transform: translateY(0); }
-  60% {  transform: rotate(-5deg); }
-  100% {  transform: translateY(0); }
-  100% {  transform: rotate(5deg); }
+  0% {
+    transform: rotate(5deg);
+  }
+  30% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(0);
+  }
+  60% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: rotate(5deg);
+  }
 }
 
 .logoHome {
@@ -161,23 +177,28 @@ export default {
   /* -webkit-background-clip: text; Apply gradient as text fill */
   /* background-clip: text; */
   /* color: white; */
-  text-shadow: 1px 1px 0 #66c2ff, 2px 2px 0 #0e06fd, 3px 3px 0 #ed2aff;
+  text-shadow:
+    1px 1px 0 #66c2ff,
+    2px 2px 0 #0e06fd,
+    3px 3px 0 #ed2aff;
   color: transparent;
   font-weight: 1000;
   animation: wavy 1s ease-in-out infinite;
   transform: rotate(-5deg);
-
 }
 .logoDesc {
   font-family: cursive;
 }
 
-.neon{
+.neon {
   border: 2px solid transparent; /* Set a transparent border */
-  box-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff, 0 0 30px #00f2ff, 0 0 40px #00f2ff; /* Multiple shadows to create the neon effect */
+  box-shadow:
+    0 0 10px #00f2ff,
+    0 0 20px #00f2ff,
+    0 0 30px #00f2ff,
+    0 0 40px #00f2ff; /* Multiple shadows to create the neon effect */
 }
-.footer{
+.footer {
   height: 11vh;
 }
 </style>
-      

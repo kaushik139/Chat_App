@@ -1,29 +1,22 @@
 <template>
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import SocketioService from './services/socketio.service.js';
+import { mapGetters } from "vuex";
+import SocketioService from "./services/socketio.service.js";
 
 export default {
-  components: {
-  },
+  components: {},
   name: "App",
 
-  computed: {
-  },
+  computed: {},
 
+  watch: {},
 
+  data: () => ({}),
 
-  watch: {
-  },
-
-  data: () => ({
-  }),
-  
-  async mounted() {
-  },
+  async mounted() {},
 };
 </script>
 
