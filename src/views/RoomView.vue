@@ -3,7 +3,7 @@
     <nav-bar class="mt-0" :data="navData"></nav-bar>
     <div class="row content">
       <!-- ////////////////////Side Menu////////////////////////////////// -->
-      <div class="col-md-3 pList">
+      <div class="col-md-3 pList" style="height:90vh;overflow-y:auto;overflow-x:hidden">
         <div class="row m-3">
           <h5>Room Details</h5>
           <h6>
@@ -166,13 +166,13 @@ export default {
     const roomId = this.$route.query.roomId;
     this.roomId = roomId;
     this.$store.dispatch("getPassKey", roomId);
+    this.rooms = this.$store
     this.socketService = new socketioService(roomId);
     this.participant.push({ name: localStorage.getItem("name") });
     this.socketService.setMessageListener((message) => {
       this.messages.push(message);
     });
     this.socketService.setMemberListener((participantList) => {
-
       this.participant = participantList;
     });
   },
