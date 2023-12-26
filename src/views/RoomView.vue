@@ -1,21 +1,45 @@
 <template>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Room Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6>Room Name: {{roomId}}</h6>
+          <h6>Room Key: {{roomKey}}</h6>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="copyToClipboard">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
   <div class="cont bg-primary">
     <nav-bar class="mt-0" :data="navData"></nav-bar>
     <div class="row content">
       <!-- ////////////////////Side Menu////////////////////////////////// -->
-      <div class="col-md-3 mt-4 pList" style="">
+      <div class="col-md-3 " style="height:90vh;overflow-y:auto;overflow-x:hidden">
         <div class="row m-3">
-          <h5>Room Details</h5>
-          <h6>
-            Room ID: <span class="key">{{ roomId }}</span>
-          </h6>
-          <h6>
-            Room Key: <span class="key">{{ roomKey }}</span>
-          </h6>
+          <h5>Current Rooms</h5>
+          <div class="list-group" v-for="(room,index) in $store.state.currentRooms" :key="index">
+            <a href="#" :class="['list-group-item', 'list-group-item-action', { 'act-list': roomId === $route.query.roomId }]" aria-current="true">
+              {{room}}
+            </a>
+            <div style="position:fixed; bottom:20px;">
+              <button type="button" style="width:180%;" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Room Details
+              </button>
+            </div>
+          </div>
         </div>
         <!-- ////////////////////Participant's List////////////////////////////////// -->
         <div class="row mt-4">
-          <h5>In Room</h5>
+          <!-- <h5>In Room</h5>
           <ul
             type="none"
             v-for="(person, index) in participant"
@@ -27,7 +51,7 @@
               {{ person.name }}
               <span v-if="person.name === hostName">(Host)</span>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
       <!-- ////////////////////////Message Area/////////////////////////////////////// -->
@@ -67,7 +91,7 @@
           <div class="row senDiv">
             <form @submit="sendMessage">
               <input type="text" v-model="msg" class="msgText px-2" />
-              <button class="sendBtn btn btn-lg bg-secondary text-primary">
+              <button class="sendBtn btn btn-lg bg-dark text-primary">
                 SEND
               </button>
             </form>
@@ -75,7 +99,7 @@
         </div>
       </div>
     </div>
-    <Footer class="footer" :height="footerHeight"></Footer>
+    <!-- <Footer class="footer"></Footer> -->
   </div>
 </template>
 
@@ -111,7 +135,26 @@ export default {
       return (msg) => moment(msg.created_at).format("MMMM Do YYYY, h:mm a");
     },
   },
-  methods: {
+  methods: {    
+    copyToClipboard() {
+      if ('clipboard' in navigator) {
+        navigator.clipboard.writeText(`
+        Room Name: ${this.roomId} \n
+        Room Key: ${this.roomKey}
+        `)
+          .then(() => {
+            console.log('Text copied to clipboard');
+            // Optionally, you can provide user feedback here
+          })
+          .catch(err => {
+            console.error('Unable to copy:', err);
+            // Handle errors or provide feedback if copying fails
+          });
+      } else {
+        // Fallback for browsers that don't support navigator.clipboard
+        console.log("Copy to clipboard not allowed")
+      }
+    },
     sendMessage(e) {
       e.preventDefault();
       this.socketService.sendMessage({
@@ -147,8 +190,6 @@ export default {
   
     ],
     DBMessages: [],
-    footerHeight: 48,
-
   }),
 
   beforeMount() {
@@ -177,6 +218,7 @@ export default {
     this.socketService.setMemberListener((participantList) => {
       this.participant = participantList;
     });
+    this.$store.dispatch("getCurrentRooms");
   },
 
 };
@@ -188,28 +230,18 @@ export default {
   color: white;
   margin: 0px;
   width: 100%;
-  min-height: 50vh;
+  min-height: 90vh;
 }
 .content {
   width: 95%;
   margin: auto;
   padding: 10px;
   text-align: center;
-  /* height: ; */
 }
 .pList {
   background: #8d04b0;
-  height: 75vh;
+  /* min-height: 90vh; */
   border-radius: 30px;
-  overflow-y:auto;
-  overflow-x:hidden;
-}
-.pList::-webkit-scrollbar {
-  width: 0; /* Remove scrollbar width */
-}
-
-.pList::-webkit-scrollbar-track {
-  background: purple; /* Track color */
 }
 .list {
   text-align: left;
@@ -225,11 +257,11 @@ export default {
   padding: 3%;
   position: relative;
   /* height: calc(100vh - 100px); */
-  height: 75vh;
+  height: 77vh;
   /* overflow-y: auto; */
 }
 .messages {
-  height: 400px;
+  /*height: 400px;*/
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: transparent transparent !important;
@@ -247,6 +279,7 @@ export default {
   border-radius: 8px 8px 8px 8px;
   width: 75%;
   position: relative;
+  padding:10px;
   /* margin-left: auto; */
 }
 .msgcontent {
@@ -264,8 +297,9 @@ export default {
   text-align: right;
 }
 .senDiv {
-  position: sticky;
-  margin-top: 10px;
+  position: fixed;
+  bottom:5px;
+  margin-top: 30px;
   height: auto;
   width: 100%;
   bottom: 2;
@@ -276,6 +310,7 @@ export default {
   border-radius: 15px;
   width: 80%;
   padding: 5px;
+  height:40px;
   border: 0.5px solid #0490f4;
 }
 .msgText:focus {
@@ -288,7 +323,6 @@ export default {
 .sendBtn {
   color: #0490f4;
   /* margin-top: -25px; */
-  margin-left: -10px;
 }
 .iconPlane {
   color: rgb(2, 54, 106);
@@ -297,5 +331,8 @@ export default {
 .key {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 15px;
+}
+.act-list{
+  background: greenyellow;
 }
 </style>
