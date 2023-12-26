@@ -11,6 +11,7 @@ class SocketioService {
         email: localStorage.getItem("email"),
         roomId: roomId,
       });
+      console.log("KKLLKLKL",roomId)
     });
   }
 
@@ -20,6 +21,7 @@ class SocketioService {
 
   setMessageListener(callback) {
     this.socket.on("message", (message) => {
+      console.log("PPPPPPP", message)
       callback(message);
     });
   }
@@ -37,6 +39,7 @@ class SocketioService {
       msg,
       roomId,
     });
+    console.log(":::",msg)
   }
 
   expired() {

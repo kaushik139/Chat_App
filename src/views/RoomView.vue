@@ -18,6 +18,33 @@
     </div>
   </div>
 
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel2">Room Members</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul
+          type="none"
+          v-for="(person, index) in participant"
+          :key="index"
+          class="list"
+        >
+          <li>
+            {{ person.name }}
+            <span v-if="person.name === hostName">(Host)</span>
+          </li>
+        </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="copyToClipboard">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
   
   <div class="cont bg-primary">
     <nav-bar class="mt-0" :data="navData"></nav-bar>
@@ -25,38 +52,29 @@
       <!-- ////////////////////Side Menu////////////////////////////////// -->
       <div class="col-md-3 " style="height:90vh;overflow-y:auto;overflow-x:hidden">
         <div class="row m-3">
-          <h5>Current Rooms</h5>
-          <div class="list-group" v-for="(room,index) in $store.state.currentRooms" :key="index">
-            <a href="#" :class="['list-group-item', 'list-group-item-action', { 'act-list': roomId === $route.query.roomId }]" aria-current="true">
+          <h5>Your Rooms</h5>
+
+          <div class="list-group">
+            <router-link :to="'room?roomId='+room" :class="['list-group-item', 'list-group-item-action', { 'act-list': room === $route.query.roomId }]" aria-current="true"  v-for="(room,index) in $store.state.currentRooms" :key="index">
               {{room}}
-            </a>
-            <div style="position:fixed; bottom:20px;">
-              <button type="button" style="width:180%;" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            </router-link>
+            <div >
+              <button type="button" class="btn btn-info " style="width:100%" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Room Details
+              </button>
+            </div>
+            <div >
+              <button type="button" class="btn btn-info " style="width:100%" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                Room Members
               </button>
             </div>
           </div>
         </div>
-        <!-- ////////////////////Participant's List////////////////////////////////// -->
-        <div class="row mt-4">
-          <!-- <h5>In Room</h5>
-          <ul
-            type="none"
-            v-for="(person, index) in participant"
-            :key="index"
-            class="list"
-          >
-            <li>
-              <img src="img_avatar.jpg" alt="P.I" width="96" height="96" />
-              {{ person.name }}
-              <span v-if="person.name === hostName">(Host)</span>
-            </li>
-          </ul> -->
-        </div>
+
       </div>
       <!-- ////////////////////////Message Area/////////////////////////////////////// -->
       <div class="col-md-9 msg">
-        <div class="msgArea">
+        <div class="msgArea" style="overflow-y:scroll">
           <div class="row messages" ref="msgArea">
             <!-- Messages content -->
             <ul
@@ -165,6 +183,32 @@ export default {
       this.msg = "";
       this.$refs.msgArea.scrollTop = this.$refs.msgArea.scrollHeight;
     },
+    async freshLoad(){
+      const roomId = this.$route.query.roomId;
+      this.DBMessages=[]
+      this.messages=[]
+    this.roomId = roomId;
+    this.$store.dispatch("getPassKey", roomId);
+    this.rooms = this.$store
+    this.socketService = new socketioService(roomId);
+    this.participant.push({ name: localStorage.getItem("name") });
+    this.socketService.setMessageListener((message) => {
+   
+      this.messages.push(message);
+    });
+    this.socketService.setMemberListener((participantList) => {
+      this.participant = participantList;
+    });
+    this.$store.dispatch("getCurrentRooms");
+    const userEmail = localStorage.getItem("email");
+    await this.$store.dispatch("getMessages", {
+      roomId: this.roomId,
+      userEmail: userEmail,
+    });
+    if (this.messagesGetter) {
+      this.DBMessages = this.messagesGetter;
+    }
+    }
   },
   data: () => ({
     navData: {
@@ -195,31 +239,25 @@ export default {
   beforeMount() {
     this.navData.showProfileChip = true;
   },
-  async mounted() {
-    const userEmail = localStorage.getItem("email");
-    await this.$store.dispatch("getMessages", {
-      roomId: this.roomId,
-      userEmail: userEmail,
-    });
-    if (this.messagesGetter) {
-      this.DBMessages = this.messagesGetter;
-    }
-  },
+  // async mounted() {
+  //   const userEmail = localStorage.getItem("email");
+  //   await this.$store.dispatch("getMessages", {
+  //     roomId: this.roomId,
+  //     userEmail: userEmail,
+  //   });
+  //   if (this.messagesGetter) {
+  //     this.DBMessages = this.messagesGetter;
+  //   }
+  // },
   async created() {
-    const roomId = this.$route.query.roomId;
-    this.roomId = roomId;
-    this.$store.dispatch("getPassKey", roomId);
-    this.rooms = this.$store
-    this.socketService = new socketioService(roomId);
-    this.participant.push({ name: localStorage.getItem("name") });
-    this.socketService.setMessageListener((message) => {
-      this.messages.push(message);
-    });
-    this.socketService.setMemberListener((participantList) => {
-      this.participant = participantList;
-    });
-    this.$store.dispatch("getCurrentRooms");
+    await this.freshLoad()
   },
+  watch: {
+    async '$route.query.roomId'(){
+        await this.freshLoad()
+    },
+  },
+
 
 };
 </script>
@@ -297,7 +335,6 @@ export default {
   text-align: right;
 }
 .senDiv {
-  position: fixed;
   bottom:5px;
   margin-top: 30px;
   height: auto;
