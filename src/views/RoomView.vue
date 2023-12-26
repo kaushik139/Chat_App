@@ -111,6 +111,7 @@
               <input type="text" v-model="msg" class="msgText px-2" />
               <button class="sendBtn btn btn-lg bg-dark text-primary">
                 SEND
+                <i ></i>
               </button>
             </form>
           </div>

@@ -8,11 +8,12 @@
       <div class="carousel-item active bg-primary" data-bs-interval="2000">
        <div class="carousel2"
        style="width: 100%; max-width: 100%; height: 65vh; display: block; position: relative;">
-        <div class="logo mt-5"> ChatON </div>
+        <div name="slide-1" class="logo mt-5"> ChatON </div>
        </div>
       </div>
       <div class="carousel-item " data-bs-interval="2000">
         <img
+        name="image-slide"
   src="https://www.shutterstock.com/image-photo/woman-using-computer-laptop-on-600nw-1891028470.jpg"
   class="d-block"
   style="width: 100%; max-width: 100%; height: auto; max-height: 65vh; display: block;"
